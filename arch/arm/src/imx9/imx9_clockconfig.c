@@ -87,7 +87,7 @@ void imx9_clockconfig(void)
 }
 
 #ifdef CONFIG_IMX9_CLK_OVER_SCMI
-int imx9_sm_setrootclock(sm_clock_t *sm_clk)
+static int imx9_sm_setrootclock(sm_clock_t *sm_clk)
 {
   scmi_clock_rate_t rate = /* clang-format off */
     {
@@ -156,7 +156,7 @@ int imx9_sm_setrootclock(sm_clock_t *sm_clk)
   return OK;
 }
 
-int imx9_sm_getipfreq(sm_clock_t *sm_clk)
+static int imx9_sm_getipfreq(sm_clock_t *sm_clk)
 {
   scmi_clock_rate_t rate = /* clang-format off */
     {
