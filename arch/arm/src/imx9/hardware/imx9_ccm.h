@@ -1,8 +1,7 @@
 /****************************************************************************
- * arch/arm/include/imx9/chip.h
+ * arch/arm64/src/imx9/hardware/imx9_ccm.h
  *
  * SPDX-License-Identifier: Apache-2.0
- * SPDX-FileCopyrightText: 2024 NXP
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -21,36 +20,22 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_INCLUDE_IMX9_CHIP_H
-#define __ARCH_ARM_INCLUDE_IMX9_CHIP_H
+#ifndef __ARCH_ARM_SRC_IMX9_HARDWARE_IMX9_CCM_H
+#define __ARCH_ARM_SRC_IMX9_HARDWARE_IMX9_CCM_H
 
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
 #include <nuttx/config.h>
-#include <arch/imx9/irq.h>
+#include "hardware/imx9_memorymap.h"
 
-/****************************************************************************
- * Pre-processor Definitions
- ****************************************************************************/
+#if defined(CONFIG_ARCH_CHIP_IMX93_M33)
+#  include "hardware/imx93/imx93_ccm.h"
+#  include "hardware/imx93/imx93_pll.h"
+#elif defined(CONFIG_ARCH_CHIP_IMX95_M7)
+#else
+#  error Unrecognized i.MX9 architecture
+#endif
 
-/* NVIC priority levels *****************************************************/
-
-/* Each priority field holds an 8-bit priority value, 0-15. The lower the
- * value, the greater the priority of the corresponding interrupt.  The i.MX
- * RT processor implements only bits[7:4] of each field, bits[3:0] read as
- * zero and ignore writes.
- */
-
-#define NVIC_SYSH_PRIORITY_MIN        0xf0 /* All bits[7:4] set is min pri */
-#define NVIC_SYSH_PRIORITY_DEFAULT    0x80 /* Midpoint is the default */
-#define NVIC_SYSH_PRIORITY_MAX        0x00 /* Zero is maximum priority */
-#define NVIC_SYSH_PRIORITY_STEP       0x40 /* Two bits of interrupt pri used */
-
-#define IMX9_GPIO_NPORTS          5
-
-#define ARMV8M_PERIPHERAL_INTERRUPTS (IMX9_IRQ_NEXTINT)
-
-
-#endif /* __ARCH_ARM_INCLUDE_IMX9_CHIP_H */
+#endif /* __ARCH_ARM_SRC_IMX9_HARDWARE_IMX9_CCM_H_ */

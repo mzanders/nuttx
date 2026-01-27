@@ -19,6 +19,18 @@ config ARCH_CHIP_IMX95_M7
 	select ARMV7M_HAVE_DTCM
 	select IMX9_HAVE_MU
 
+config ARCH_CHIP_IMX93_M33
+	bool "i.MX93 Cortex-M33 Processor"
+	select ARCH_CORTEXM33
+	select ARMV8M_HAVE_ICACHE
+	select ARMV8M_HAVE_DCACHE
+	select ARMV8M_HAVE_ITCM
+	select ARMV8M_HAVE_DTCM
+
+#TODO: add Messaging Unit V1 support for RPMsg.
+# Supposedly also used on imxRT11xx, RT6xx, iMX8M Mini/Nano
+# but no NuttX support could be found.
+
 endchoice # i.MX9 Chip Selection
 
 config IMX9_HAVE_MU
@@ -45,6 +57,7 @@ endif
 config IMX9_WFI_AWAKES_AT_SYSTICK
 	bool "WFI awakes at systick interrupts"
 	default y
+	depends on ARCH_CHIP_IMX95_M7
 	---help---
 	Configure the GPC to wake up from systick interrupts at WFI
 	instruction

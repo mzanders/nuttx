@@ -30,6 +30,8 @@ CHIP_CSRCS = imx9_allocateheap.c imx9_start.c imx9_clockconfig.c imx9_gpio.c imx
 ifeq ($(CONFIG_IMX9_SCMI),y)
   CHIP_CSRCS += imx9_scmi.c
   # NXP SDK SCMI interface for pinctrl and clocking
+else
+  CHIP_CSRCS += imx9_ccm.c
 endif
 
 ifeq ($(CONFIG_RPTUN),y)
