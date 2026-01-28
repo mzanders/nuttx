@@ -22,8 +22,6 @@ config ARCH_CHIP_IMX95_M7
 config ARCH_CHIP_IMX93_M33
 	bool "i.MX93 Cortex-M33 Processor"
 	select ARCH_CORTEXM33
-	select ARMV8M_HAVE_ICACHE
-	select ARMV8M_HAVE_DCACHE
 	select ARMV8M_HAVE_ITCM
 	select ARMV8M_HAVE_DTCM
 
