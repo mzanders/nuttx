@@ -27,7 +27,7 @@
 
 #include "imx9_mu.h"
 #include "arm_internal.h"
-#include "hardware/imx95/imx95_memorymap.h"
+#include "hardware/imx9_memorymap.h"
 #include "hardware/imx9_mu.h"
 #include <debug.h>
 #include <nuttx/config.h>
