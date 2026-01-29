@@ -61,7 +61,7 @@ struct imx9_mudev_s
  * Private Data
  ****************************************************************************/
 
-#ifdef CONFIG_IMX9_MU5
+#ifdef CONFIG_IMX95_MU5
 static struct imx9_mudev_s g_mu5_dev = /* clang-format off */
 {
   .mubase = IMX9_MU5_MUA_BASE,
@@ -69,7 +69,7 @@ static struct imx9_mudev_s g_mu5_dev = /* clang-format off */
 }; /* clang-format on */
 #endif
 
-#ifdef CONFIG_IMX9_MU7
+#ifdef CONFIG_IMX95_MU7
 static struct imx9_mudev_s g_mu7_dev = /* clang-format off */
 {
   .mubase = IMX9_MU7_MUB_BASE,
@@ -77,7 +77,7 @@ static struct imx9_mudev_s g_mu7_dev = /* clang-format off */
 }; /* clang-format on */
 #endif
 
-#ifdef CONFIG_IMX9_MU8
+#ifdef CONFIG_IMX95_MU8
 static struct imx9_mudev_s g_mu8_dev = /* clang-format off */
 {
   .mubase = IMX9_MU8_MUB_BASE,
@@ -149,7 +149,7 @@ struct imx9_mudev_s *imx95_mu_init(int index)
 {
   struct imx9_mudev_s *priv;
 
-#ifdef CONFIG_IMX9_MU5
+#ifdef CONFIG_IMX95_MU5
   if ((index == 5))
     {
       priv = &g_mu5_dev;
@@ -157,7 +157,7 @@ struct imx9_mudev_s *imx95_mu_init(int index)
 
   else
 #endif
-#ifdef CONFIG_IMX9_MU7
+#ifdef CONFIG_IMX95_MU7
       if ((index == 7))
     {
       priv = &g_mu7_dev;
@@ -165,7 +165,7 @@ struct imx9_mudev_s *imx95_mu_init(int index)
 
   else
 #endif
-#ifdef CONFIG_IMX9_MU8
+#ifdef CONFIG_IMX95_MU8
       if ((index == 8))
     {
       priv = &g_mu8_dev;
