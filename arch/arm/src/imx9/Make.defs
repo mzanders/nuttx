@@ -21,8 +21,6 @@
 #
 ############################################################################
 
-include armv7-m/Make.defs
-
 # i.MX9-specific C source files
 
 CHIP_CSRCS = imx9_allocateheap.c imx9_start.c imx9_clockconfig.c imx9_gpio.c imx9_iomuxc.c imx9_irq.c imx9_timerisr.c imx9_idle.c
