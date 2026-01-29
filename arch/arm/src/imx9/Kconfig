@@ -40,6 +40,24 @@ config IMX9_SCMI
 	default y
 	depends on IMX9_MU5
 
+config IMX9_XCACHE
+	bool
+	default n
+
+config IMX9_LPCAC_PC
+	bool "Low Power Cache - Program Cache (ICACHE)"
+	default n
+	depends on ARCH_CHIP_IMX93_M33
+	select ARCH_ICACHE
+	select IMX9_XCACHE
+
+config IMX9_LPCAC_PS
+	bool "Low Power Cache - Peripheral System (DCACHE)"
+	default n
+	depends on ARCH_CHIP_IMX93_M33
+	select ARCH_DCACHE
+	select IMX9_XCACHE
+
 if IMX9_SCMI
 
 config IMX9_CLK_OVER_SCMI

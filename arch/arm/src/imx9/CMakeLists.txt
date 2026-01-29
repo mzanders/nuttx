@@ -41,6 +41,10 @@ if(CONFIG_RPTUN)
   list(APPEND SRCS imx9_rsctable.c imx9_rptun.c)
 endif()
 
+if(CONFIG_IMX9_XCACHE)
+  list(APPEND SRCS imx9_xcache.c)
+endif()
+
 if(CONFIG_IMX9_MU)
   list(APPEND SRCS imx9_mu.c)
 endif()

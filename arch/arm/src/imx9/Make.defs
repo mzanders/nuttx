@@ -32,6 +32,10 @@ else
   CHIP_CSRCS += imx9_ccm.c
 endif
 
+ifeq ($(CONFIG_IMX9_XCACHE),y)
+  CHIP_CSRCS += imx9_xcache.c
+endif
+
 ifeq ($(CONFIG_RPTUN),y)
   CHIP_CSRCS += imx9_rsctable.c imx9_rptun.c
 endif
