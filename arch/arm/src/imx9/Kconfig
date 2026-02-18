@@ -24,10 +24,7 @@ config ARCH_CHIP_IMX93_M33
 	select ARCH_CORTEXM33
 	select ARMV8M_HAVE_ITCM
 	select ARMV8M_HAVE_DTCM
-
-#TODO: add Messaging Unit V1 support for RPMsg.
-# Supposedly also used on imxRT11xx, RT6xx, iMX8M Mini/Nano
-# but no NuttX support could be found.
+	select IMX9_HAVE_MU
 
 endchoice # i.MX9 Chip Selection
 
@@ -38,7 +35,7 @@ config IMX9_HAVE_MU
 config IMX9_SCMI
 	bool "SCMI Interface"
 	default y
-	depends on IMX9_MU5
+	depends on IMX95_MU5
 
 config IMX9_XCACHE
 	bool
@@ -1023,6 +1020,20 @@ menuconfig IMX9_MU
 	depends on IMX9_HAVE_MU
 
 if IMX9_MU
+
+config IMX93_MU1
+	bool "MU1 M33 <-> A55"
+	default y
+	depends on ARCH_CHIP_IMX93_M33
+	---help---
+		Enable mailbox 1 that operates between M33 and A55 cores
+
+config IMX93_MU2
+	bool "MU2 M33 <-> A55"
+	default n
+	depends on ARCH_CHIP_IMX93_M33
+	---help---
+		Enable mailbox 2 that operates between M33 and A55 cores
 
 config IMX95_MU5
 	bool "MU5 M7 <-> M33"

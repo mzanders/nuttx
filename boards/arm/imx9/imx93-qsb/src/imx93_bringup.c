@@ -31,28 +31,74 @@
 #include <syslog.h>
 #include "imx93-qsb.h"
 
+#include <fcntl.h>      // For O_RDWR
+#include <unistd.h>     // For sleep, dup2, close
+#include <nuttx/board.h>
+
+#include <stdio.h>
+
 #ifdef CONFIG_RPTUN
 #  include <imx9_rptun.h>
 #endif
 
-#ifdef CONFIG_RPMSG_UART
-#  include <nuttx/serial/uart_rpmsg.h>
+#ifdef CONFIG_NSH_LIBRARY
+extern int nsh_consolemain(int argc, FAR char *argv[]);
+#endif
+
+#ifdef CONFIG_RPMSG_UART_RAW
+#  include <nuttx/serial/uart_rpmsg_raw.h>
 #endif
 
 #ifdef CONFIG_IMX9_FLEXCAN
 #  include "imx9_flexcan.h"
 #endif
 
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+#ifdef CONFIG_RPMSG_UART_RAW
+static int nsh_rpmsg_task(int argc, FAR char *argv[])
+{
+  int fd;
+  int ret;
+
+  sleep(1);
+
+  fd = open("/dev/tty-nsh", O_RDWR);
+
+  if (fd < 0)
+    {
+      syslog(LOG_ERR, "Failed to open /dev/tty-nsh: %d\n", errno);
+      return -1;
+    }
+  
+  dup2(fd, 0);
+  dup2(fd, 1);
+  dup2(fd, 2);
+  
+  close(fd);
+  
+  ret = nsh_consolemain(0, NULL);
+  
+  return ret;
+}
+#endif
+
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
 
-#ifdef CONFIG_RPMSG_UART
-void rpmsg_serialinit(void)
+#ifdef CONFIG_RPMSG_UART_RAW
+void rpmsg_serialrawinit(void)
 {
-  uart_rpmsg_init("netcore", "proxy", 4096, true);
+  uart_rpmsg_raw_init("netcore", "-nsh", 4096, true);
+  uart_rpmsg_raw_init("netcore", "-test", 4096, false);
 }
 #endif
+
 
 /****************************************************************************
  * Name: imx_bringup
@@ -65,6 +111,7 @@ void rpmsg_serialinit(void)
 int imx93_bringup(void)
 {
   int ret;
+  syslog(LOG_INFO, "imx93 bringup\n");
 
 #ifdef CONFIG_RPTUN
   imx9_rptun_init("imx9-shmem", "netcore");
@@ -106,6 +153,15 @@ int imx93_bringup(void)
 
 #ifdef CONFIG_IMX9_FLEXCAN2
   imx9_caninitialize(2);
+#endif
+
+#ifdef CONFIG_RPMSG_UART_RAW
+  // Spawn NSH on rpmsg
+  task_create("nsh_rpmsg",
+              CONFIG_SYSTEM_NSH_PRIORITY,
+              CONFIG_SYSTEM_NSH_STACKSIZE,
+              nsh_rpmsg_task,
+              NULL);
 #endif
 
   UNUSED(ret);
