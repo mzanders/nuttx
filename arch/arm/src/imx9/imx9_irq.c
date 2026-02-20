@@ -95,32 +95,121 @@ static void imx9_dumpnvic(const char *msg, int irq)
           getreg32(NVIC_SYSHCON_USGFAULTENA),
           getreg32(NVIC_SYSTICK_CTRL_ENABLE));
 #endif
-
-  irqinfo("  IRQ ENABLE:\n");
-  for (int i = 0; i < (IMX9_IRQ_NEXTINT + 31) / 32; i++)
-    {
-      irqinfo("              %08x %08x %08x %08x\n",
-              getreg32(NVIC_IRQ_ENABLE(i * 32 + 0)),
-              getreg32(NVIC_IRQ_ENABLE(i * 32 + 32)),
-              getreg32(NVIC_IRQ_ENABLE(i * 32 + 64)),
-              getreg32(NVIC_IRQ_ENABLE(i * 32 + 96)));
-      i += 3;
-    }
-
+  irqinfo("  IRQ ENABLE: %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ0_31_ENABLE),
+          getreg32(NVIC_IRQ32_63_ENABLE),
+          getreg32(NVIC_IRQ64_95_ENABLE),
+          getreg32(NVIC_IRQ96_127_ENABLE));
+#if IMX9_IRQ_NEXTINT > 128
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ128_159_ENABLE),
+          getreg32(NVIC_IRQ160_191_ENABLE),
+          getreg32(NVIC_IRQ192_223_ENABLE),
+          getreg32(NVIC_IRQ224_239_ENABLE));
+#endif
   irqinfo("  SYSH_PRIO:  %08x %08x %08x\n",
           getreg32(NVIC_SYSH4_7_PRIORITY),
           getreg32(NVIC_SYSH8_11_PRIORITY),
           getreg32(NVIC_SYSH12_15_PRIORITY));
+  irqinfo("  IRQ PRIO:   %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ0_3_PRIORITY),
+          getreg32(NVIC_IRQ4_7_PRIORITY),
+          getreg32(NVIC_IRQ8_11_PRIORITY),
+          getreg32(NVIC_IRQ12_15_PRIORITY));
+#if IMX9_IRQ_NEXTINT > 16
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ16_19_PRIORITY),
+          getreg32(NVIC_IRQ20_23_PRIORITY),
+          getreg32(NVIC_IRQ24_27_PRIORITY),
+          getreg32(NVIC_IRQ28_31_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 32
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ32_35_PRIORITY),
+          getreg32(NVIC_IRQ36_39_PRIORITY),
+          getreg32(NVIC_IRQ40_43_PRIORITY),
+          getreg32(NVIC_IRQ44_47_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 48
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ48_51_PRIORITY),
+          getreg32(NVIC_IRQ52_55_PRIORITY),
+          getreg32(NVIC_IRQ56_59_PRIORITY),
+          getreg32(NVIC_IRQ60_63_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 64
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ64_67_PRIORITY),
+          getreg32(NVIC_IRQ68_71_PRIORITY),
+          getreg32(NVIC_IRQ72_75_PRIORITY),
+          getreg32(NVIC_IRQ76_79_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 80
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ80_83_PRIORITY),
+          getreg32(NVIC_IRQ84_87_PRIORITY),
+          getreg32(NVIC_IRQ88_91_PRIORITY),
+          getreg32(NVIC_IRQ92_95_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 96
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ96_99_PRIORITY),
+          getreg32(NVIC_IRQ100_103_PRIORITY),
+          getreg32(NVIC_IRQ104_107_PRIORITY),
+          getreg32(NVIC_IRQ108_111_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 112
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ112_115_PRIORITY),
+          getreg32(NVIC_IRQ116_119_PRIORITY),
+          getreg32(NVIC_IRQ120_123_PRIORITY),
+          getreg32(NVIC_IRQ124_127_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 128
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ128_131_PRIORITY),
+          getreg32(NVIC_IRQ132_135_PRIORITY),
+          getreg32(NVIC_IRQ136_139_PRIORITY),
+          getreg32(NVIC_IRQ140_143_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 144
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ144_147_PRIORITY),
+          getreg32(NVIC_IRQ148_151_PRIORITY),
+          getreg32(NVIC_IRQ152_155_PRIORITY),
+          getreg32(NVIC_IRQ156_159_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 160
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ160_163_PRIORITY),
+          getreg32(NVIC_IRQ164_167_PRIORITY),
+          getreg32(NVIC_IRQ168_171_PRIORITY),
+          getreg32(NVIC_IRQ172_175_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 176
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ176_179_PRIORITY),
+          getreg32(NVIC_IRQ180_183_PRIORITY),
+          getreg32(NVIC_IRQ184_187_PRIORITY),
+          getreg32(NVIC_IRQ188_191_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 192
+  irqinfo("              %08x %08x %08x %08x\n",
+          getreg32(NVIC_IRQ192_195_PRIORITY),
+          getreg32(NVIC_IRQ196_199_PRIORITY),
+          getreg32(NVIC_IRQ200_203_PRIORITY),
+          getreg32(NVIC_IRQ204_207_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 208
+  irqinfo("              %08x %08x %08x\n",
+          getreg32(NVIC_IRQ208_211_PRIORITY),
+          getreg32(NVIC_IRQ212_215_PRIORITY),
+          getreg32(NVIC_IRQ216_219_PRIORITY));
+#endif
+#if IMX9_IRQ_NEXTINT > 218
+#  warning Missing logic
+#endif
 
-  irqinfo("  IRQ PRIO:\n");
-  for (int i = 0; i < IMX9_IRQ_NEXTINT; i += 16)
-    {
-      irqinfo("              %08x %08x %08x %08x\n",
-              getreg32(NVIC_IRQ_PRIORITY(i + 0)),
-              getreg32(NVIC_IRQ_PRIORITY(i + 4)),
-              getreg32(NVIC_IRQ_PRIORITY(i + 8)),
-              getreg32(NVIC_IRQ_PRIORITY(i + 12)));
-    }
   leave_critical_section(flags);
 }
 #else
@@ -201,21 +290,73 @@ static int imx9_irqinfo(int irq, uintptr_t *regaddr, uint32_t *bit,
   DEBUGASSERT(irq >= IMX9_IRQ_NMI && irq < NR_IRQS);
 
   /* Check for external interrupt */
+
   if (irq >= IMX9_IRQ_EXTINT)
-  {
-      if (extint < IMX9_IRQ_NEXTINT)
-      {
-          *regaddr = NVIC_IRQ0_31_ENABLE + offset + ((extint >> 5) << 2);
-          *bit     = 1 << (extint & 0x1F);
-      }
+    {
+      if (extint < 32)
+        {
+           *regaddr = (NVIC_IRQ0_31_ENABLE + offset);
+           *bit     = 1 << extint;
+        }
       else
-      {
+#if IMX9_IRQ_NEXTINT > 32
+      if (extint < 64)
+        {
+           *regaddr = (NVIC_IRQ32_63_ENABLE + offset);
+           *bit     = 1 << (extint - 32);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 64
+      if (extint < 96)
+        {
+           *regaddr = (NVIC_IRQ64_95_ENABLE + offset);
+           *bit     = 1 << (extint - 64);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 96
+      if (extint < 128)
+        {
+           *regaddr = (NVIC_IRQ96_127_ENABLE + offset);
+           *bit     = 1 << (extint - 96);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 128
+      if (extint < 160)
+        {
+           *regaddr = (NVIC_IRQ128_159_ENABLE + offset);
+           *bit     = 1 << (extint - 128);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 160
+      if (extint < 192)
+        {
+           *regaddr = (NVIC_IRQ160_191_ENABLE + offset);
+           *bit     = 1 << (extint - 160);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 192
+      if (extint < 219)
+        {
+           *regaddr = (NVIC_IRQ192_223_ENABLE + offset);
+           *bit     = 1 << (extint - 192);
+        }
+      else
+#endif
+#if IMX9_IRQ_NEXTINT > 218
+#  error Missing logic
+#endif
+        {
           return ERROR; /* Invalid interrupt */
-      }
-  }
+        }
+    }
 
   /* Handle processor exceptions.  Only a few can be disabled */
-  
+
   else
     {
       *regaddr = NVIC_SYSHCON;
