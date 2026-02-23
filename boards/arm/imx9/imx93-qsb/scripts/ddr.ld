@@ -28,7 +28,7 @@ MEMORY
   m_interrupts (rx)  : ORIGIN = 0x89000000, LENGTH = 0x00000800
   dram (rx)  : ORIGIN = 0x89000800, LENGTH = 0x00FFF800
   itcm (rx)  : ORIGIN = 0x0FFE0000, LENGTH = 128K
-  dtcm  (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+  dtcm  (rwx) : ORIGIN = 0x20000000, LENGTH = 120K
   ocram (rwx) : ORIGIN = 0x20480000, LENGTH = 640K
 }
 
