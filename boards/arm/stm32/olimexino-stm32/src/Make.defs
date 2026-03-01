@@ -22,7 +22,7 @@
 
 include $(TOPDIR)/Make.defs
 
-CSRCS = stm32_boot.c stm32_spi.c stm32_leds.c
+CSRCS = stm32_boot.c stm32_bringup.c stm32_spi.c stm32_leds.c
 
 ifeq ($(CONFIG_STM32_CAN_CHARDRIVER),y)
 CSRCS += stm32_can.c
@@ -32,8 +32,8 @@ ifeq ($(CONFIG_BOARDCTL),y)
 CSRCS += stm32_appinit.c
 endif
 
-ifeq ($(CONFIG_USBMSC),y)
-CSRCS += stm32_usbmsc.c
+ifeq ($(CONFIG_MMCSD),y)
+CSRCS += stm32_mmcsd.c
 endif
 
 ifeq ($(CONFIG_USBDEV_COMPOSITE),y)
@@ -46,6 +46,10 @@ endif
 
 ifeq ($(CONFIG_ARCH_BUTTONS),y)
 CSRCS += stm32_buttons.c
+endif
+
+ifeq ($(CONFIG_USBMSC),y)
+CSRCS += stm32_usbmsc.c
 endif
 
 DEPPATH += --dep-path board

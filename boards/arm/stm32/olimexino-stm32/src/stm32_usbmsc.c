@@ -31,15 +31,8 @@
 #include <errno.h>
 
 #include <nuttx/board.h>
-#include <nuttx/mmcsd.h>
-#include <nuttx/spi/spi.h>
 
 #include "stm32.h"
-#include "olimexino-stm32.h"
-
-/* There is nothing to do here if SPI support is not selected. */
-
-#ifdef CONFIG_STM32_SPI
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -49,19 +42,6 @@
 
 #ifndef CONFIG_SYSTEM_USBMSC_DEVMINOR1
 #  define CONFIG_SYSTEM_USBMSC_DEVMINOR1 0
-#endif
-
-/* SLOT number(s) could depend on the board configuration */
-
-#ifdef CONFIG_ARCH_BOARD_OLIMEXINO_STM32
-#  undef OLIMEXINO_STM32_MMCSDSLOTNO
-#  define OLIMEXINO_STM32_MMCSDSLOTNO 0
-#  undef OLIMEXINO_STM32_MMCSDSPIPORTNO
-#  define OLIMEXINO_STM32_MMCSDSPIPORTNO 2
-#else
-/* Add configuration for new STM32 boards here */
-
-#  error "Unrecognized STM32 board"
 #endif
 
 /****************************************************************************
@@ -84,44 +64,5 @@ int board_usbmsc_initialize(int port)
    * In this case, there is nothing further to be done here.
    */
 
-  struct spi_dev_s *spi;
-  int ret;
-
-  /* First, get an instance of the SPI interface */
-
-  syslog(LOG_INFO, "Initializing SPI port %d\n",
-      OLIMEXINO_STM32_MMCSDSPIPORTNO);
-
-  spi = stm32_spibus_initialize(OLIMEXINO_STM32_MMCSDSPIPORTNO);
-  if (!spi)
-    {
-      syslog(LOG_ERR, "ERROR: Failed to initialize SPI port %d\n",
-          OLIMEXINO_STM32_MMCSDSPIPORTNO);
-      return -ENODEV;
-    }
-
-  syslog(LOG_INFO, "Successfully initialized SPI port %d\n",
-      OLIMEXINO_STM32_MMCSDSPIPORTNO);
-
-  /* Now bind the SPI interface to the MMC/SD driver */
-
-  syslog(LOG_INFO, "Bind SPI to the MMC/SD driver, minor=%d slot=%d\n",
-      CONFIG_SYSTEM_USBMSC_DEVMINOR1, OLIMEXINO_STM32_MMCSDSLOTNO);
-
-  ret = mmcsd_spislotinitialize(CONFIG_SYSTEM_USBMSC_DEVMINOR1,
-                                OLIMEXINO_STM32_MMCSDSLOTNO, spi);
-  if (ret < 0)
-    {
-      syslog(LOG_ERR,
-         "ERROR: Failed to bind SPI port %d to MMC/SD minor=%d slot=%d %d\n",
-         OLIMEXINO_STM32_MMCSDSPIPORTNO, CONFIG_SYSTEM_USBMSC_DEVMINOR1,
-         OLIMEXINO_STM32_MMCSDSLOTNO, ret);
-      return ret;
-    }
-
-  syslog(LOG_INFO, "Successfully bound SPI to the MMC/SD driver\n");
-
   return OK;
 }
-
-#endif /* CONFIG_STM32_SPI */

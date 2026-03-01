@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/olimexino-stm32/src/stm32_appinit.c
+ * boards/arm/stm32/olimexino-stm32/src/stm32_mmcsd.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -26,47 +26,70 @@
 
 #include <nuttx/config.h>
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <syslog.h>
 #include <errno.h>
 
 #include <nuttx/board.h>
-#include <nuttx/kmalloc.h>
 #include <nuttx/mmcsd.h>
+#include <nuttx/spi/spi.h>
 
+#include "stm32.h"
 #include "olimexino-stm32.h"
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+#ifndef CONFIG_STM32_SPI2
+#  error "SD driver requires CONFIG_STM32_SPI2 to be enabled"
+#endif
+
+#ifdef CONFIG_DISABLE_MOUNTPOINT
+#  error "SD driver requires CONFIG_DISABLE_MOUNTPOINT to be disabled"
+#endif
+
+/****************************************************************************
+ * Private Definitions
+ ****************************************************************************/
+
+static const int SD_SPI_PORT = 2; /* SD is connected to SPI2 port */
+static const int SD_SLOT_NO  = 0; /* There is only one SD slot */
 
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
 
 /****************************************************************************
- * Name: board_app_initialize
+ * Name: board_usbmsc_initialize
  *
  * Description:
- *   Perform application specific initialization.  This function is never
- *   called directly from application code, but only indirectly via the
- *   (non-standard) boardctl() interface using the command BOARDIOC_INIT.
- *
- * Input Parameters:
- *   arg - The boardctl() argument is passed to the board_app_initialize()
- *         implementation without modification.  The argument has no
- *         meaning to NuttX; the meaning of the argument is a contract
- *         between the board-specific initialization logic and the
- *         matching application logic.  The value could be such things as a
- *         mode enumeration value, a set of DIP switch switch settings, a
- *         pointer to configuration data read from a file or serial FLASH,
- *         or whatever you would like to do with it.  Every implementation
- *         should accept zero/NULL as a default configuration.
- *
- * Returned Value:
- *   Zero (OK) is returned on success; a negated errno value is returned on
- *   any failure to indicate the nature of the failure.
+ *   Perform architecture specific initialization of the USB MSC device.
  *
  ****************************************************************************/
 
-int board_app_initialize(uintptr_t arg)
+int stm32_mmcsd_initialize(int minor)
 {
-  return stm32_bringup();
+  struct spi_dev_s *spi;
+  int rv;
+
+  mcinfo("INFO: Initializing mmcsd card\n");
+
+  spi = stm32_spibus_initialize(SD_SPI_PORT);
+  if (spi == NULL)
+    {
+      mcerr("ERROR: Failed to initialize SPI port %d\n", SD_SPI_PORT);
+      return -ENODEV;
+    }
+
+  rv = mmcsd_spislotinitialize(minor, SD_SLOT_NO, spi);
+  if (rv < 0)
+    {
+      mcerr("ERROR: Failed to bind SPI port %d to SD slot %d\n",
+            SD_SPI_PORT, SD_SLOT_NO);
+      return rv;
+    }
+
+  spiinfo("INFO: mmcsd card has been initialized successfully\n");
+  return OK;
 }

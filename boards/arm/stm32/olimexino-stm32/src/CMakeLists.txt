@@ -20,7 +20,7 @@
 #
 # ##############################################################################
 
-set(SRCS stm32_boot.c stm32_spi.c stm32_leds.c)
+set(SRCS stm32_boot.c stm32_bringup.c stm32_spi.c stm32_leds.c)
 
 if(CONFIG_STM32_CAN_CHARDRIVER)
   list(APPEND SRCS stm32_can.c)
@@ -30,8 +30,8 @@ if(CONFIG_BOARDCTL)
   list(APPEND SRCS stm32_appinit.c)
 endif()
 
-if(CONFIG_USBMSC)
-  list(APPEND SRCS stm32_usbmsc.c)
+if(CONFIG_MMCSD)
+  list(APPEND SRCS stm32_mmcsd.c)
 endif()
 
 if(CONFIG_USBDEV_COMPOSITE)
@@ -44,6 +44,10 @@ endif()
 
 if(CONFIG_ARCH_BUTTONS)
   list(APPEND SRCS stm32_buttons.c)
+endif()
+
+if(CONFIG_USBMSC)
+  list(APPEND SRCS stm32_usbmsc.c)
 endif()
 
 target_sources(board PRIVATE ${SRCS})

@@ -37,11 +37,16 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#if STM32_NSPI < 1
-#  undef CONFIG_STM32_SPI1
-#  undef CONFIG_STM32_SPI2
-#elif STM32_NSPI < 2
-#  undef CONFIG_STM32_SPI2
+/****************************************************************************
+ * PROC File System Configuration
+ */
+
+#ifdef CONFIG_FS_PROCFS
+#  ifdef CONFIG_NSH_PROC_MOUNTPOINT
+#    define STM32_PROCFS_MOUNTPOINT CONFIG_NSH_PROC_MOUNTPOINT
+#  else
+#    define STM32_PROCFS_MOUNTPOINT "/proc"
+#  endif
 #endif
 
 /* LEDs *********************************************************************
@@ -96,12 +101,12 @@
  *                                                    Pin #      Name
  * -- ----- --------------------------------     ----------------------------
  *
- *  PC[09] PA4/SPI1_NSS/USART2_CK/ADC4                20       D10(#SS1)
+ *  PA[04] PA4/SPI1_NSS/USART2_CK/ADC4                20       D10(#SS1)
  *  PD[02] PD2/TIM3_ETR                               54       D25(MMC_CS)
  */
 
 #define GPIO_SPI1_SSn (GPIO_OUTPUT | GPIO_CNF_OUTPP | GPIO_MODE_50MHz | \
-                       GPIO_PORTC | GPIO_PIN9 | GPIO_OUTPUT_SET)
+                       GPIO_PORTA | GPIO_PIN4 | GPIO_OUTPUT_SET)
 #define USER_CSN      GPIO_SPI1_SSn
 
 #define GPIO_SPI2_SSn (GPIO_OUTPUT | GPIO_CNF_OUTPP | GPIO_MODE_50MHz | \
@@ -109,18 +114,30 @@
 #define MMCSD_CSN     GPIO_SPI2_SSn
 
 /****************************************************************************
- * Public Types
- ****************************************************************************/
-
-/****************************************************************************
- * Public Data
+ * Public Functions Prototypes
  ****************************************************************************/
 
 #ifndef __ASSEMBLY__
 
 /****************************************************************************
- * Public Functions Prototypes
+ * Name: stm32_bringup
+ *
+ * Description:
+ *   Perform architecture specific initialization
+ *
+ *   CONFIG_BOARDCTL=y:
+ *     If CONFIG_NSH_ARCHINITIALIZE=y:
+ *       Called from the NSH library (or other application)
+ *     Otherwise, assumed to be called from some other application.
+ *
+ *   Otherwise CONFIG_BOARD_LATE_INITIALIZE=y:
+ *     Called from board_late_initialize().
+ *
+ *   Otherwise, bad news:  Never called
+ *
  ****************************************************************************/
+
+int stm32_bringup(void);
 
 /****************************************************************************
  * Name: stm32_spidev_initialize
@@ -130,9 +147,20 @@
  *
  ****************************************************************************/
 
-#if defined(CONFIG_STM32_SPI1) || defined(CONFIG_STM32_SPI2) || \
-    defined(CONFIG_STM32_SPI3)
-void weak_function stm32_spidev_initialize(void);
+#if defined(CONFIG_STM32_SPI1) || defined(CONFIG_STM32_SPI2)
+void stm32_spidev_initialize(void);
+#endif
+
+/****************************************************************************
+ * Name: stm32_mmcsd_initialize
+ *
+ * Description:
+ *   Initializes SPI-based SD card
+ *
+ ****************************************************************************/
+
+#ifdef CONFIG_MMCSD
+int stm32_mmcsd_initialize(int minor);
 #endif
 
 /****************************************************************************
@@ -143,7 +171,9 @@ void weak_function stm32_spidev_initialize(void);
  *
  ****************************************************************************/
 
+#ifdef CONFIG_USBDEV
 void stm32_usbinitialize(void);
+#endif
 
 /****************************************************************************
  * Name: stm32_usb_set_pwr_callback()

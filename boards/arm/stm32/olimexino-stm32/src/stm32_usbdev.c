@@ -79,9 +79,8 @@ void stm32_usbinitialize(void)
 {
   uinfo("called\n");
 
-  /* USB Soft Connect Pullup */
-
   stm32_configgpio(GPIO_USB_PULLUPN);
+  stm32_configgpio(GPIO_USB_VBUS);
 }
 
 /****************************************************************************
